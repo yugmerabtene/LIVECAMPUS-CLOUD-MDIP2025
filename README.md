@@ -165,6 +165,7 @@ Les conférences DevOpsDays, initiées par Patrick Debois, ont joué un rôle cr
 
 Adopter DevOps implique des changements significatifs dans la manière de travailler au sein d'une entreprise. L’état d’esprit est primordial : il s'agit de promouvoir la collaboration, l’automatisation, l’amélioration continue et le partage des connaissances. 
 
+![image](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/7a7f72ac-a7a3-49c2-b0e4-aad2ff792ae7)
 
 
 ### Le succès d’une démarche DevOps
