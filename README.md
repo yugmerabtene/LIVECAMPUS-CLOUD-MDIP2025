@@ -1,3 +1,6 @@
+![image](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/540d4996-fcfc-4e23-9a6e-d36b0628f6de)
+
+
 Le DevOps est une approche de développement logiciel et d'exploitation informatique qui vise à améliorer la collaboration entre les équipes de développement (Dev) et d'exploitation (Ops). Cette méthode repose sur un ensemble de principes clés résumés par l'acronyme **CALMS** : Culture, Automation, Lean, Measurement, Sharing.
 
 ### Les Composants Clés de DevOps
