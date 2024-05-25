@@ -394,11 +394,11 @@ Les environnements de préproduction sur AWS doivent être aussi similaires que 
 
 La gestion des défaillances en production sur AWS implique la surveillance continue de l'application et de l'infrastructure, ainsi que la mise en place de mécanismes de rollback et de déploiement automatisés. Les services tels que AWS CloudWatch peuvent être utilisés pour surveiller les métriques et les journaux, tandis que les groupes de capacités ECS peuvent être configurés avec des stratégies de déploiement pour gérer automatiquement les défaillances et les mises à jour.
 
-### Chapitre-02 Apprendre à sécuriser les données sensibles.
+## Chapitre-02 Apprendre à sécuriser les données sensibles.
   
 - **Partie-01 Initiation à la cryptographie symetrique et assymetrique en Shellcode et python**
 
-### Chapitre-03 Découvrir l’importance du versioning du code et des données sensibles.
+## Chapitre-03 Découvrir l’importance du versioning du code et des données sensibles.
 
 - **Partie-01 Traçabilité et reproductibilité :**
 
@@ -424,7 +424,7 @@ Pour tirer le meilleur parti du versioning, il est essentiel de suivre certaines
 
 
 
-### Chapitre-04 Utiliser des secrets et des variables environnementales.
+## Chapitre-04 Utiliser des secrets et des variables environnementales.
 
 Dans ce chapitre, nous explorerons l'importance cruciale de la gestion des secrets et des variables environnementales lors du déploiement en production sur des plateformes telles qu'AWS ECS et S3. Les secrets, tels que les clés d'API, les informations d'identification et les jetons d'accès, ainsi que les variables environnementales, jouent un rôle essentiel dans la configuration et le fonctionnement des applications. Nous examinerons les meilleures pratiques pour gérer ces éléments sensibles de manière sécurisée et efficace dans un environnement de déploiement en production.
 
@@ -444,7 +444,7 @@ Nous explorerons comment intégrer la gestion des secrets dans les pipelines de 
 
 Enfin, nous aborderons l'importance de sécuriser les communications entre les services et les applications lors de l'utilisation de secrets et de variables environnementales. Nous discuterons des meilleures pratiques pour sécuriser les connexions réseau, telles que l'utilisation de protocoles de chiffrement et de certificats SSL/TLS, afin de protéger les données sensibles en transit.
 
-### Chapitre-05 Accéder à un serveur distant via le protocole SSH.
+## Chapitre-05 Accéder à un serveur distant via le protocole SSH.
 
 Dans ce chapitre, nous aborderons les principes fondamentaux de l'accès à un serveur distant via le protocole SSH (Secure Shell), en mettant l'accent sur l'utilisation d'AWS et de l'outil PuTTY pour établir une connexion sécurisée avec des instances EC2.
 
