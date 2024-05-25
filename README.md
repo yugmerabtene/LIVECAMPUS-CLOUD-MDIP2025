@@ -466,7 +466,47 @@ Nous discuterons également des meilleures pratiques pour la gestion des clés S
 
 En suivant les instructions et les bonnes pratiques décrites dans ce chapitre, les utilisateurs seront en mesure d'accéder de manière sécurisée à des serveurs distants via le protocole SSH en utilisant AWS et PuTTY, ce qui est essentiel pour la gestion et la maintenance des instances EC2 dans des environnements cloud.
 
+### MODULE-03 Utiliser un service de Cloud Computing (EC2) pour déployer des scripts
 
+#### Chapitre-01 Déploiement de scripts sur EC2 :
+
+Nous commencerons par comprendre les bases du déploiement de scripts sur des instances EC2. Cela inclura la création et la configuration d'une instance EC2, le transfert des scripts sur l'instance, et l'exécution des scripts à distance à l'aide de connexions SSH.
+
+#### Chapitre-02 Automatisation des tâches avec des scripts sur EC2 :
+
+Dans cette partie, nous explorerons comment automatiser des tâches récurrentes en exécutant des scripts sur des instances EC2. Nous aborderons des cas d'utilisation pratiques tels que la sauvegarde de données, la gestion des journaux, et la planification des tâches à l'aide de cron jobs.
+
+#### Chapitre-03 Surveillance et gestion des instances EC2 :
+
+Nous discuterons également des meilleures pratiques pour surveiller et gérer les instances EC2 déployées pour l'exécution de scripts. Cela comprendra la configuration d'alertes CloudWatch pour surveiller les performances et l'utilisation des instances, ainsi que la mise en place de politiques de sauvegarde et de restauration pour garantir la disponibilité des données.
+
+### Utilisation du protocole SMTP pour l'envoi de mails automatiques
+
+#### Chapitre-04 Configuration d'un serveur de messagerie :
+
+Nous commencerons par comprendre les bases de la configuration d'un serveur de messagerie compatible SMTP. Cela inclura la configuration des paramètres SMTP, tels que l'hôte SMTP, le port et les informations d'identification nécessaires pour l'authentification.
+
+#### Chapitre-05 Envoi d'e-mails automatiques avec Python :
+
+Dans cette partie, nous explorerons comment utiliser des scripts Python pour envoyer des e-mails automatiques via le protocole SMTP. Nous aborderons des cas d'utilisation pratiques tels que l'envoi de notifications, de rapports périodiques et de confirmations de transactions.
+
+#### Chapitre-06 Gestion de la sécurité et de la fiabilité :
+
+Nous discuterons également des meilleures pratiques pour garantir la sécurité et la fiabilité de l'envoi de mails automatiques. Cela comprendra la gestion des autorisations SMTP, la sécurisation des informations d'identification, et la mise en place de mécanismes de surveillance pour suivre les performances de l'envoi de mails.
+
+### Scraping et rapatriement de données via le protocole HTTP
+
+#### Chapitre-07 Scraping de données web :
+
+Nous commencerons par comprendre les bases du scraping de données web à l'aide de bibliothèques Python telles que Beautiful Soup et Scrapy. Nous verrons comment extraire des données structurées à partir de pages web en utilisant des requêtes HTTP et des expressions XPath.
+
+#### Chapitre-08 Rapatriement de données via le protocole HTTP :
+
+Dans cette partie, nous explorerons comment rapatrier des données à partir de services web externes via le protocole HTTP. Cela inclura la configuration des requêtes HTTP, le traitement des réponses JSON ou XML, et la gestion des erreurs de communication avec les services web.
+
+#### Chapitre-09 Utilisation avancée du scraping et du rapatriement de données :
+
+Nous discuterons également des meilleures pratiques pour le scraping et le rapatriement de données, y compris la mise en cache des données, la limitation des requêtes pour éviter le blocage, et la gestion des données extraites ou rapatriées pour assurer leur qualité et leur intégrité.
 
 ---
 FIN SAAS PAAS ETC...
