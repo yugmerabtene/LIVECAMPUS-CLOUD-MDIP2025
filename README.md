@@ -350,12 +350,15 @@ DevSecOps intègre la sécurité dès le début du cycle de développement et de
 Selon le rapport 2020 du State of DevOps, 75% des entreprises avec un haut niveau de maturité DevOps peuvent remédier aux vulnérabilités de sécurité en moins d’une journée, illustrant l'efficacité de l'approche DevSecOps.
 
 
----
+----
 # MODULE-02 
 
-Déployer du code en production : bonnes pratiques (exemple avec EC2)
+**Déployer du code en production : bonnes pratiques (exemple avec EC2)**
 
-## Partie-01. Comprendre les bonnes pratiques de déploiement de code en production :
+----
+
+## Chapitre-01 Comprendre les bonnes pratiques de déploiement de code en production :
+
 
 Ce cours vise à fournir une compréhension approfondie des meilleures pratiques pour déployer du code en production sur AWS ECS (Elastic Container Service). Nous explorerons également le rôle crucial de S3 (Simple Storage Service) dans le stockage des artefacts de déploiement, tels que les fichiers de configuration, les scripts de déploiement, les packages d'application, etc., qui peuvent être récupérés lors du déploiement sur ECS. Cette approche garantit la cohérence des versions déployées dans différents environnements et réduit le risque d'introduire des erreurs lors du déploiement. De plus, nous mettrons en évidence l'importance de la documentation et de la communication lors des déploiements pour assurer une transition fluide vers les nouvelles versions du logiciel.
 
@@ -391,10 +394,10 @@ Les environnements de préproduction sur AWS doivent être aussi similaires que 
 
 La gestion des défaillances en production sur AWS implique la surveillance continue de l'application et de l'infrastructure, ainsi que la mise en place de mécanismes de rollback et de déploiement automatisés. Les services tels que AWS CloudWatch peuvent être utilisés pour surveiller les métriques et les journaux, tandis que les groupes de capacités ECS peuvent être configurés avec des stratégies de déploiement pour gérer automatiquement les défaillances et les mises à jour.
 
+----
 - ## Chapitre-02 Apprendre à sécuriser les données sensibles.
-
-**1 initiation à la cryptographie symetrique et assymetrique en Shellcode et python**
-
+- **Partie-01 Initiation à la cryptographie symetrique et assymetrique en Shellcode et python**
+----
 
   
 - **Chapitre-03 Découvrir l’importance du versioning du code et des données sensibles.**
