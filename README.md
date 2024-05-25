@@ -394,7 +394,7 @@ Les environnements de préproduction sur AWS doivent être aussi similaires que 
 
 La gestion des défaillances en production sur AWS implique la surveillance continue de l'application et de l'infrastructure, ainsi que la mise en place de mécanismes de rollback et de déploiement automatisés. Les services tels que AWS CloudWatch peuvent être utilisés pour surveiller les métriques et les journaux, tandis que les groupes de capacités ECS peuvent être configurés avec des stratégies de déploiement pour gérer automatiquement les défaillances et les mises à jour.
 
-- ## Chapitre-02 Apprendre à sécuriser les données sensibles.
+### Chapitre-02 Apprendre à sécuriser les données sensibles.
   
 - **Partie-01 Initiation à la cryptographie symetrique et assymetrique en Shellcode et python**
 
