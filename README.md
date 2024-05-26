@@ -424,6 +424,8 @@ La cryptographie symétrique existe depuis des siècles. Des méthodes basiques 
 **Claude Shannon : Le Père de la Cryptographie Mathématique :**
 
 En 1949, Claude Shannon a publié "Théorie de la communication des systèmes de secret", modernisant les techniques de chiffrement avec des processus mathématiques avancés. Ses travaux ont jeté les bases de la cryptographie symétrique moderne.
+![image](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/935750e3-b113-4601-889d-105522de9f27)
+
 
 **Exemple en Python avec AES :**
 
