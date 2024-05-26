@@ -397,8 +397,183 @@ La gestion des défaillances en production sur AWS implique la surveillance cont
 
 ## Chapitre-02 Apprendre à sécuriser les données sensibles.
   
-- **Partie-01 Initiation à la cryptographie symetrique et assymetrique en Shellcode et python**
+# Apprendre à Sécuriser les Données Sensibles
 
+## Partie 01 : Initiation à la Cryptographie Symétrique et Asymétrique en Shellcode et Python
+
+### Cryptographie
+
+La cryptographie est une technique essentielle pour sécuriser les informations. Il existe principalement deux types de cryptographie : symétrique et asymétrique.
+
+#### Cryptographie Symétrique
+
+La cryptographie symétrique utilise une seule clé pour chiffrer et déchiffrer les informations. Cette méthode est rapide et efficace mais présente des défis en matière de gestion sécurisée des clés.
+
+**Exemple de Cryptographie Symétrique :**
+
+Supposons que Maria veuille envoyer un message chiffré à Jose. Les deux doivent d'abord se mettre d'accord sur une clé commune. Maria utilise cette clé pour chiffrer le message et l'envoie à Jose, qui utilise la même clé pour déchiffrer le message.
+
+**Sécurité des Clés :**
+
+La sécurité en cryptographie symétrique repose entièrement sur la clé. Elle doit être secrète et difficile à deviner. Cependant, la distribution sécurisée de la clé peut être un point faible.
+
+**Histoire de la Cryptographie Symétrique :**
+
+La cryptographie symétrique existe depuis des siècles. Des méthodes basiques étaient utilisées dans l'Égypte ancienne et l'Empire romain. La Seconde Guerre mondiale a vu l'usage intensif de systèmes cryptographiques symétriques sophistiqués pour protéger les messages militaires.
+
+**Claude Shannon : Le Père de la Cryptographie Mathématique :**
+
+En 1949, Claude Shannon a publié "Théorie de la communication des systèmes de secret", modernisant les techniques de chiffrement avec des processus mathématiques avancés. Ses travaux ont jeté les bases de la cryptographie symétrique moderne.
+
+**Exemple en Python avec AES :**
+
+Pour implémenter la cryptographie symétrique avec AES en Python, suivez ces étapes :
+
+1. **Installation de la bibliothèque :**
+
+   ```bash
+   pip install cryptography
+   ```
+
+2. **Script Python pour le chiffrement et déchiffrement avec AES :**
+
+   ```python
+   from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+   from cryptography.hazmat.primitives import padding
+   from cryptography.hazmat.backends import default_backend
+   import os
+
+   # Génération d'une clé et d'un IV
+   key = os.urandom(32)  # Clé de 256 bits pour AES-256
+   iv = os.urandom(16)   # IV de 128 bits
+
+   # Données à chiffrer
+   data = b'Voici des données sensibles.'
+
+   # Padding des données
+   padder = padding.PKCS7(algorithms.AES.block_size).padder()
+   padded_data = padder.update(data) + padder.finalize()
+
+   # Chiffrement
+   cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
+   encryptor = cipher.encryptor()
+   ciphertext = encryptor.update(padded_data) + encryptor.finalize()
+
+   print(f"Chiffrement : {ciphertext}")
+
+   # Déchiffrement
+   decryptor = cipher.decryptor()
+   decrypted_padded_data = decryptor.update(ciphertext) + decryptor.finalize()
+
+   # Suppression du padding
+   unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
+   decrypted_data = unpadder.update(decrypted_padded_data) + unpadder.finalize()
+
+   print(f"Déchiffrement : {decrypted_data}")
+   ```
+
+3. **Exécution du script en ligne de commande :**
+
+   Sauvegardez le script dans un fichier nommé `aes_example.py`, puis exécutez-le avec la commande suivante :
+
+   ```bash
+   python aes_example.py
+   ```
+
+**Algorithmes de Chiffrement Symétrique :**
+
+- **DES :** Premier algorithme de chiffrement informatique développé en 1975 par IBM.
+- **AES :** Successeur du DES, plus sûr et plus efficace, avec des clés de taille variable et un processus de cryptage en blocs.
+
+**Avantages et Inconvénients :**
+
+- **Avantages :** Rapidité, simplicité, et efficacité pour protéger les données dans les systèmes informatiques actuels.
+- **Inconvénients :** Distribution sécurisée des clés nécessaire, vulnérabilité aux attaques par force brute.
+
+#### Cryptographie Asymétrique
+
+La cryptographie asymétrique utilise deux clés distinctes : une clé publique pour chiffrer les données et une clé privée pour les déchiffrer.
+
+**Exemple de Cryptographie Asymétrique :**
+
+Ce type de chiffrement est utilisé pour sécuriser les transactions en ligne, comme les emails ou les transactions sur les réseaux de blockchain.
+
+**Fonctionnement :**
+
+- Chaque partie génère une paire de clés : une clé publique, partagée entre les participants, et une clé privée, gardée secrète.
+- L'expéditeur utilise la clé publique du destinataire pour chiffrer les données et signe numériquement le message avec sa clé privée.
+- Le destinataire utilise sa clé privée pour déchiffrer le message.
+
+**Exemple en Python avec RSA :**
+
+Pour implémenter la cryptographie asymétrique avec RSA en Python, suivez ces étapes :
+
+1. **Installation de la bibliothèque :**
+
+   ```bash
+   pip install cryptography
+   ```
+
+2. **Script Python pour le chiffrement et déchiffrement avec RSA :**
+
+   ```python
+   from cryptography.hazmat.primitives.asymmetric import rsa, padding
+   from cryptography.hazmat.primitives import serialization, hashes
+
+   # Génération d'une paire de clés RSA
+   private_key = rsa.generate_private_key(
+       public_exponent=65537,
+       key_size=2048,
+       backend=default_backend()
+   )
+   public_key = private_key.public_key()
+
+   # Données à chiffrer
+   data = b'Voici des données sensibles.'
+
+   # Chiffrement avec la clé publique
+   ciphertext = public_key.encrypt(
+       data,
+       padding.OAEP(
+           mgf=padding.MGF1(algorithm=hashes.SHA256()),
+           algorithm=hashes.SHA256(),
+           label=None
+       )
+   )
+
+   print(f"Chiffrement : {ciphertext}")
+
+   # Déchiffrement avec la clé privée
+   decrypted_data = private_key.decrypt(
+       ciphertext,
+       padding.OAEP(
+           mgf=padding.MGF1(algorithm=hashes.SHA256()),
+           algorithm=hashes.SHA256(),
+           label=None
+       )
+   )
+
+   print(f"Déchiffrement : {decrypted_data}")
+   ```
+
+3. **Exécution du script en ligne de commande :**
+
+   Sauvegardez le script dans un fichier nommé `rsa_example.py`, puis exécutez-le avec la commande suivante :
+
+   ```bash
+   python rsa_example.py
+   ```
+
+**Inconvénients et Solutions :**
+
+- **Inconvénients :** Plus lent et plus intensif en calcul que le chiffrement symétrique.
+- **Solutions :** Les méthodes de chiffrement hybride combinent les avantages des deux approches. Par exemple, une clé de session générée de manière aléatoire peut être utilisée pour surmonter les limitations de performance.
+
+### Pour résumer
+
+La cryptographie est une technologie essentielle pour protéger les informations sensibles. Les techniques symétriques et asymétriques ont leurs propres avantages et inconvénients. En combinant ces méthodes, on peut obtenir des solutions de sécurité robustes et efficaces pour différents scénarios d'utilisation.
+
+----
 ## Chapitre-03 Découvrir l’importance du versioning du code et des données sensibles.
 
 - **Partie-01 Traçabilité et reproductibilité :**
