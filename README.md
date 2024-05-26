@@ -361,11 +361,136 @@ Selon le rapport 2020 du State of DevOps, 75% des entreprises avec un haut nivea
 ## Chapitre-01 Comprendre les bonnes pratiques de déploiement de code en production :
 
 
-Ce cours vise à fournir une compréhension approfondie des meilleures pratiques pour déployer du code en production sur AWS ECS (Elastic Container Service). Nous explorerons également le rôle crucial de S3 (Simple Storage Service) dans le stockage des artefacts de déploiement, tels que les fichiers de configuration, les scripts de déploiement, les packages d'application, etc., qui peuvent être récupérés lors du déploiement sur ECS. Cette approche garantit la cohérence des versions déployées dans différents environnements et réduit le risque d'introduire des erreurs lors du déploiement. De plus, nous mettrons en évidence l'importance de la documentation et de la communication lors des déploiements pour assurer une transition fluide vers les nouvelles versions du logiciel.
+Le MODULE-02 vise à fournir une compréhension approfondie des meilleures pratiques pour déployer du code en production sur AWS ECS (Elastic Container Service). Nous explorerons également le rôle crucial de S3 (Simple Storage Service) dans le stockage des artefacts de déploiement, tels que les fichiers de configuration, les scripts de déploiement, les packages d'application, etc., qui peuvent être récupérés lors du déploiement sur ECS. Cette approche garantit la cohérence des versions déployées dans différents environnements et réduit le risque d'introduire des erreurs lors du déploiement. De plus, nous mettrons en évidence l'importance de la documentation et de la communication lors des déploiements pour assurer une transition fluide vers les nouvelles versions du logiciel.
 
 - **Partie-01 Intégration continue avec AWS ECS, S3 et GitOps**
 
 L'intégration continue (CI) est une pratique essentielle pour les développeurs travaillant avec AWS ECS et S3. Elle consiste à intégrer toutes les modifications de code dans une branche principale aussi souvent que possible, permettant d'identifier rapidement les défaillances. Sur AWS, les pipelines CI peuvent être implémentés à l'aide de services tels que AWS CodePipeline, qui peuvent déclencher des actions automatisées à chaque modification de code. En intégrant GitOps dans le processus, vous pouvez stocker l'infrastructure déclarative dans des dépôts Git, assurant ainsi la traçabilité et la reproductibilité des déploiements.
+
+## Intégration continue : le code, les livrables et les environnements
+
+![Intégration continue](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/e9d35bed-b606-4e55-b7fa-91a38a528f99)
+
+### Les grands principes de l'intégration continue
+
+L'intégration continue est un ensemble de pratiques visant à livrer efficacement le code logiciel produit par les équipes de développement. Parmi les objectifs principaux, on trouve :
+
+- **Automatisation des builds, livraisons et déploiements** : Réduire les actions manuelles pour minimiser les erreurs humaines et permettre aux experts de se concentrer sur leur produit.
+- **Feedback rapide** : Fournir une visibilité sur les impacts des modifications du code, permettant aux développeurs d'intégrer sereinement leurs changements.
+
+### Du code source aux environnements
+
+L'intégration continue concerne l'intégration du nouveau code, la livraison continue des livrables et le déploiement continu des produits. Voici quelques questions fréquentes :
+
+- Quelle est la différence entre la promotion du code, des livrables et des environnements ?
+- Comment relier le déploiement en production à la branche master du dépôt de code ?
+- Quels automatismes mettre en place pour assurer la cohérence entre le dépôt de code et les environnements de l'application ?
+
+Ces questions varient selon le contexte technique, le projet, le secteur d'activité et la maturité des processus. L'objectif est de détailler les concepts sans dépendre d'outils spécifiques, bien que certains outils facilitent la mise en œuvre.
+
+### Le concept du "build once"
+
+![Build Once](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/40d9e1e7-1594-42bb-9121-ae21b252afbf)
+
+Un principe clé de l'intégration continue est le "build once", c'est-à-dire ne construire un livrable qu'une seule fois après modification du code. Cela réduit le risque de créer un livrable différent lors de déploiements ultérieurs.
+
+#### Risques de re-build :
+
+- Problèmes de machine (disque plein, etc.)
+- Soucis de réseau
+- Problèmes liés à l'outil de build (maintenance, indisponibilité)
+- Versions différentes des dépendances du produit
+- Utilisation involontaire d'une version différente du code
+
+Pour éviter ces risques, il est préférable de construire une seule fois le livrable puis de l'utiliser tel quel lors des déploiements, c'est la pratique du "build once".
+
+### La promotion des livrables
+
+![Promotion des livrables](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/35a11b22-e653-498d-b82f-f19d0aaaba62)
+
+Une fois le livrable créé, il doit subir divers tests avant la mise en production. On utilise des "étagères" pour stocker les livrables et suivre leur avancement. Ces étagères peuvent être :
+
+- Gestionnaires de livrables
+- Dossiers de livraison
+- Archivage d'artefacts
+- Dépôts d'images Docker
+
+Chez AT Internet, nous utilisons quatre étagères (dev, integ, preprod, prod) et une supplémentaire (staging) pour les livraisons urgentes de correctifs.
+
+#### Promotion des livrables
+
+Le passage d'un livrable d'une étagère à l'autre est conditionné par le succès de différentes phases de tests. La promotion implique souvent une simple copie plutôt qu'un déplacement.
+
+### Les environnements de dev
+
+![Environnements de dev](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/d869271d-18ad-4792-9101-830f05860665)
+
+Une fois les livrables obtenus et stockés, ils doivent subir différentes étapes de test et de validation avant la mise en production. Chaque livrable est déployé sur l'environnement auquel il est candidat pour des tests dynamiques, dits "boîte noire".
+
+#### Développement
+
+La première phase de déploiement consiste à valider la mécanique de déploiement et les propriétés du système sur l'environnement de développement.
+
+#### Intégration
+
+La validation de scénarios transversaux est effectuée sur l'environnement d'intégration pour assurer la compatibilité avec les autres systèmes.
+
+#### Préproduction
+
+Dernière phase de tests avant la mise en production, souvent liée à des décisions marketing ou commerciales. Si des bugs sont détectés à ce stade, cela indique un manque de tests dans les étapes précédentes.
+
+#### Staging
+
+Le staging permet de valider rapidement une correction à apporter en production, en déployant le code actuel avec la seule modification du correctif.
+
+#### Production
+
+Certaines validations peuvent se dérouler en production, telles que les "Tests Post Déploiement" pour vérifier les aspects environnementaux et les configurations spécifiques.
+
+### L'automatisation de la livraison
+
+![Automatisation](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/f9acf27c-0039-4457-b718-446186885ab1)
+
+L'orchestration de la livraison d'un produit logiciel doit être systématique et répétitive. L'automatisation permet d'atteindre cet objectif en utilisant des outils tels que Jenkins, Travis CI, GitlabCI, etc.
+
+#### Publication des livrables
+
+La publication consiste à déposer le livrable sur une étagère en fonction de la branche de code considérée. Voici les chemins de publication identifiés :
+
+- Branche ‘develop’ : livrables candidats à l’environnement de ‘développement’
+- Branche ‘release’ : livrables candidats à l’environnement de ‘préproduction’
+- Branche ‘hotfix’ : livrables candidats à l’environnement de ‘staging’
+
+#### Promotion automatisée
+
+L’automatisation de la promotion des livrables peut inclure :
+
+- Promotion intégration > préproduction
+  - Fusion du code de ‘develop’ vers ‘release’
+  - Incrémentation de la version mineure et remise à ‘0’ de la version patch sur ‘develop’
+- Promotion préproduction > production
+  - Fusion du code de ‘release’ vers ‘master’
+  - Application d’un tag sur ‘master’
+- Promotion staging > production
+  - Fusion du code de ‘hotfix’ vers ‘master’
+  - Application d’un tag sur ‘master’
+
+### L'intégration dis-continue
+
+![Intégration dis-continue](https://github.com/yugmerabtene/LIVECAMPUS-CLOUD-MDIP2025/assets/3670077/5b5eb71a-56c8-4f8e-9477-de7fb2ef5e9a)
+
+Le flux idéal de livraison continue nécessite divers automatismes et outils pour valider progressivement les produits. Cependant, il manque souvent certains éléments dans la chaîne, ce qui conduit à une intégration dis-continue. Voici l’ordre typique de mise en place des éléments :
+
+1. Construction du livrable (build)
+2. Tests unitaires
+3. Scripts de déploiement
+4. Qualité de code
+5. Déclenchement des tests
+6. Mécaniques de promotions
+
+Lorsqu’un ou plusieurs de ces éléments manquent, l’opération reste manuelle. À un niveau de maturité supérieur, toutes les opérations sont automatisées, mais des actions manuelles peuvent encore être nécessaires pour déclencher les mises en production jusqu’à ce que la confiance dans le système soit suffisante pour une automatisation complète.
+
+
 
 - **Partie-02 Créer des pipelines qui permettent une itération rapide**
 
