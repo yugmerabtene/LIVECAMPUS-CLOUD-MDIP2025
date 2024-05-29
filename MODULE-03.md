@@ -56,7 +56,7 @@ SECRET_KEY=your-secret-key
 
 **Fichier `main.py`**
 ```python
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from api.routes.message_routes import router as message_router
 from config.database import engine, Base
 from services.encryption_service import EncryptionService
@@ -83,6 +83,11 @@ app.include_router(message_router, prefix="/messages")
 async def startup_event():
     # Ajouter le service de chiffrement à l'état de l'application
     app.state.encryption_service = encryption_service
+
+# Exception handler pour les erreurs de base de données
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return HTTPException(status_code=500, detail="Internal Server Error")
 ```
 
 **Fichier `config/database.py`**
@@ -194,6 +199,7 @@ from sqlalchemy.orm import Session
 from repositories.message_repository import MessageRepository
 from services.encryption_service import EncryptionService
 from exceptions.custom_exceptions import MessageNotFoundException
+from fastapi import HTTPException
 
 # Définir le service de messages
 class MessageService:
@@ -202,18 +208,29 @@ class MessageService:
         self.encryption_service = encryption_service
 
     def create_message(self, content: str):
-        encrypted_content = self.encryption_service.encrypt(content)
-        hash_value = self.encryption_service.generate_hash(content)
-        return self.message_repository.create_message(content, encrypted_content, hash_value)
+        try:
+            encrypted_content = self.encryption_service.encrypt(content)
+            hash_value = self.encryption_service.generate_hash(content)
+            return self.message_repository.create_message(content, encrypted_content, hash_value)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to create message")
 
     def get_message(self, message_id: int):
-        message = self.message_repository.get_message_by_id(message_id)
-        decrypted_content = self.encryption_service.decrypt(message.encrypted_content)
-        return {"content": decrypted_content, "hash_value": message.hash_value}
+        try:
+            message = self.message_repository.get_message_by_id(message_id)
+            decrypted_content = self.encryption_service.decrypt(message.encrypted_content)
+            return {"content": decrypted_content, "hash_value": message.hash_value}
+        except MessageNotFoundException as e:
+            raise HTTPException(status_code=404, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to retrieve message")
 
     def list_messages(self):
-        messages = self.message_repository.get_all_messages()
-        return [{"id": msg.id, "content": self.encryption_service.decrypt(msg.encrypted_content), "hash_value": msg.hash_value} for msg in messages]
+        try:
+            messages = self.message_repository.get_all_messages()
+            return [{"id": msg.id, "content": self.encryption_service.decrypt(msg.encrypted_content), "hash_value": msg.hash_value} for msg in messages]
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to list messages")
 ```
 
 **Fichier `api/controllers/message_controller.py`**
@@ -265,6 +282,8 @@ router = APIRouter()
 class MessageCreate(BaseModel):
     content: str
 
+
+
 # Route pour créer un message
 @router.post("/")
 def create_message(message: MessageCreate, controller: MessageController = Depends()):
@@ -285,9 +304,7 @@ def list_messages(controller: MessageController = Depends()):
 ```python
 # Définir l'exception MessageNotFoundException
 class MessageNotFoundException(Exception):
-    def __init__(self, message
-
-_id: int):
+    def __init__(self, message_id: int):
         self.message = f"Message with ID {message_id} not found"
         super().__init__(self.message)
 ```
