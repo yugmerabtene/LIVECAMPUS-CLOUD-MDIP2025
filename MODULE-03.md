@@ -376,9 +376,14 @@ from repositories.message_repository import MessageRepository
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from config.database import Base
+from dotenv import load_dotenv
+import os
+
+# Charger les variables d'environnement à partir du fichier .env
+load_dotenv()
 
 # Définir les paramètres de la base de données de test
-DATABASE_URL = "sqlite:///./test.db"
+DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -419,3 +424,5 @@ def test_get_message(message_service):
 ### Documentation
 
 Utilisez Swagger pour générer automatiquement la documentation de votre API. FastAPI intègre déjà Swagger, accessible via `/docs`.
+
+En suivant ces recommandations, vous pouvez améliorer la sécurité, la maintenabilité et la robustesse de votre application FastAPI.
