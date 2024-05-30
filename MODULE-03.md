@@ -1,5 +1,3 @@
-Bien sûr, je vais fournir un guide détaillé avec des explications et du code commenté pour créer une application CRUD complète avec FastAPI et MySQL, et expliquer comment ajouter et supprimer des produits en utilisant Postman.
-
 ### 1. Installer les dépendances
 
 Vous aurez besoin de `fastapi`, `uvicorn`, `sqlalchemy`, `databases`, et `mysqlclient`.
@@ -201,8 +199,6 @@ Cette commande démarrera le serveur FastAPI et vous pourrez accéder à l'API �
 2. URL : `http://localhost:8000/products/{product_id}`
 3. Remplacez `{product_id}` par l'ID du produit que vous souhaitez supprimer.
 4. Cliquez sur `Send`.
-
-En suivant ces étapes, vous avez configuré une application CRUD complète avec FastAPI et MySQL, et vous savez comment utiliser Postman pour tester les différentes opérations CRUD.
 
 
 
