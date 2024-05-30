@@ -1,3 +1,212 @@
+Bien sûr, je vais fournir un guide détaillé avec des explications et du code commenté pour créer une application CRUD complète avec FastAPI et MySQL, et expliquer comment ajouter et supprimer des produits en utilisant Postman.
+
+### 1. Installer les dépendances
+
+Vous aurez besoin de `fastapi`, `uvicorn`, `sqlalchemy`, `databases`, et `mysqlclient`.
+
+```bash
+pip install fastapi uvicorn sqlalchemy databases mysqlclient
+```
+
+### 2. Configuration de la base de données
+
+#### Modèle de données avec MySQL
+
+Nous allons configurer SQLAlchemy pour utiliser MySQL. Assurez-vous que vous avez une instance MySQL en cours d'exécution et que vous avez créé une base de données pour cette application.
+
+```python
+# models.py
+from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+# URL de connexion à la base de données MySQL
+DATABASE_URL = "mysql://username:password@localhost/testdb"
+
+# Définir la base de données et la session
+Base = declarative_base()
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Définir le modèle de données pour les produits
+class Product(Base):
+    __tablename__ = "products"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), index=True)
+    description = Column(String(255), index=True)
+    price = Column(Integer)
+```
+
+Remplacez `username`, `password`, `localhost`, et `testdb` par vos informations de connexion MySQL.
+
+### 3. Créer les schémas Pydantic
+
+Les schémas Pydantic permettent de valider les données entrantes.
+
+```python
+# schemas.py
+from pydantic import BaseModel
+
+# Schéma de base pour un produit
+class ProductBase(BaseModel):
+    name: str
+    description: str
+    price: int
+
+# Schéma pour la création d'un produit
+class ProductCreate(ProductBase):
+    pass
+
+# Schéma pour un produit avec ID
+class Product(ProductBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+```
+
+### 4. Créer les opérations CRUD
+
+Ces fonctions permettent de gérer les opérations CRUD (Create, Read, Update, Delete) sur les produits.
+
+```python
+# crud.py
+from sqlalchemy.orm import Session
+from . import models, schemas
+
+# Fonction pour obtenir un produit par ID
+def get_product(db: Session, product_id: int):
+    return db.query(models.Product).filter(models.Product.id == product_id).first()
+
+# Fonction pour obtenir tous les produits avec pagination
+def get_products(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(models.Product).offset(skip).limit(limit).all()
+
+# Fonction pour créer un nouveau produit
+def create_product(db: Session, product: schemas.ProductCreate):
+    db_product = models.Product(**product.dict())
+    db.add(db_product)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+# Fonction pour supprimer un produit par ID
+def delete_product(db: Session, product_id: int):
+    db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
+    if db_product:
+        db.delete(db_product)
+        db.commit()
+    return db_product
+```
+
+### 5. Créer les endpoints FastAPI
+
+Les endpoints FastAPI permettent d'exposer les opérations CRUD via des API REST.
+
+```python
+# main.py
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from . import crud, models, schemas
+from .models import SessionLocal, engine
+
+# Créer les tables dans la base de données
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
+
+# Dépendance pour obtenir la session de la base de données
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Endpoint pour créer un nouveau produit
+@app.post("/products/", response_model=schemas.Product)
+def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)):
+    return crud.create_product(db=db, product=product)
+
+# Endpoint pour obtenir tous les produits
+@app.get("/products/", response_model=list[schemas.Product])
+def read_products(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    products = crud.get_products(db, skip=skip, limit=limit)
+    return products
+
+# Endpoint pour obtenir un produit par ID
+@app.get("/products/{product_id}", response_model=schemas.Product)
+def read_product(product_id: int, db: Session = Depends(get_db)):
+    db_product = crud.get_product(db, product_id=product_id)
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return db_product
+
+# Endpoint pour supprimer un produit par ID
+@app.delete("/products/{product_id}", response_model=schemas.Product)
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    db_product = crud.delete_product(db, product_id=product_id)
+    if db_product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return db_product
+```
+
+### 6. Exécuter l'application
+
+Pour exécuter l'application FastAPI, utilisez la commande suivante :
+
+```bash
+uvicorn main:app --reload
+```
+
+Cette commande démarrera le serveur FastAPI et vous pourrez accéder à l'API à `http://localhost:8000`.
+
+### 7. Utiliser Postman pour tester les endpoints
+
+#### Ajouter un produit
+
+1. Ouvrez Postman.
+2. Sélectionnez la méthode `POST`.
+3. URL : `http://localhost:8000/products/`
+4. Allez dans l'onglet `Body` et sélectionnez `raw` et `JSON`.
+5. Entrez le JSON suivant :
+
+```json
+{
+    "name": "Product 1",
+    "description": "Description of product 1",
+    "price": 100
+}
+```
+
+6. Cliquez sur `Send`.
+
+#### Lire tous les produits
+
+1. Sélectionnez la méthode `GET`.
+2. URL : `http://localhost:8000/products/`
+3. Cliquez sur `Send`.
+
+#### Lire un produit par ID
+
+1. Sélectionnez la méthode `GET`.
+2. URL : `http://localhost:8000/products/{product_id}`
+3. Remplacez `{product_id}` par l'ID du produit que vous souhaitez obtenir.
+4. Cliquez sur `Send`.
+
+#### Supprimer un produit par ID
+
+1. Sélectionnez la méthode `DELETE`.
+2. URL : `http://localhost:8000/products/{product_id}`
+3. Remplacez `{product_id}` par l'ID du produit que vous souhaitez supprimer.
+4. Cliquez sur `Send`.
+
+En suivant ces étapes, vous avez configuré une application CRUD complète avec FastAPI et MySQL, et vous savez comment utiliser Postman pour tester les différentes opérations CRUD.
+
+
+
+===============================
 ### Énoncé du Projet
 
 **Projet Final : Création d'une Application FastAPI avec Déploiement sur AWS EC2 et S3**
